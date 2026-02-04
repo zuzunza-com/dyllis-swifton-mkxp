@@ -18,6 +18,7 @@ xxd+
 /build
 /deps
 /CMakeFiles
+/output
 
 CMakeCache.txt
 cmake_install.cmake

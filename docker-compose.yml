@@ -1,0 +1,15 @@
+services:
+  mkxp-web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: mkxp-web
+    volumes:
+      # Mount the entire source directory to persist built dependencies and mkxp engine
+      - .:/src
+      # Place your game.zip in the same directory as this docker-compose.yml
+      - ./game.zip:/input/game.zip
+      # The processed web game will be output to the 'output' directory
+      - ./output:/output
+    # By default, it runs the process_game.sh entrypoint.
+    # We can override this if needed, but for "processing", just up is enough.

@@ -38,6 +38,7 @@ WORKDIR /workspace
 
 # package.json 및 pnpm-lock.yaml 복사 (의존성 캐싱 최적화)
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+COPY Makefile ./
 COPY packages/ ./packages/
 
 # 의존성 설치

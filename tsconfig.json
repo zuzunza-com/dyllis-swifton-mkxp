@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020"],
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@alibrary-illusion/parser": ["./src/parser"],
+      "@alibrary-illusion/compiler": ["./src/compiler"],
+      "@alibrary-illusion/compiler-zetpkg": ["./src/compiler/zetpkg"],
+      "@alibrary-illusion/core": ["./src/engine/core"]
+    },
+    "composite": true,
+    "incremental": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "packages",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "references": [
+    {
+      "path": "./packages/compiler"
+    },
+    {
+      "path": "./packages/compiler-zetpkg"
+    }
+  ]
+}

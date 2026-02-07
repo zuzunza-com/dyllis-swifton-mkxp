@@ -1,0 +1,180 @@
+/*
+** table-binding.cpp
+**
+** Palcon-RGSS Table API Binding
+** Based on mkxp table-binding.cpp
+** RGSS3 compatible
+**
+** Copyright (C) 2025 Palcon Team
+*/
+
+#include "../binding-util.h"
+#include "../../table/table.h"
+#include "../exception.h"
+#include <algorithm>
+#include <ruby.h>
+
+static int num2TableSize(VALUE v)
+{
+	int i = NUM2INT(v);
+	return std::max(0, i);
+}
+
+static void parseArgsTableSizes(int argc, VALUE *argv, int *x, int *y, int *z)
+{
+	*y = *z = 1;
+
+	switch (argc)
+	{
+	case 3:
+		*z = num2TableSize(argv[2]);
+		/* fall through */
+	case 2:
+		*y = num2TableSize(argv[1]);
+		/* fall through */
+	case 1:
+		*x = num2TableSize(argv[0]);
+		break;
+	default:
+		rb_error_arity(argc, 1, 3);
+	}
+}
+
+DECL_TYPE(Table);
+
+RB_METHOD(tableInitialize);
+RB_METHOD(tableResize);
+RB_METHOD(tableXSize);
+RB_METHOD(tableYSize);
+RB_METHOD(tableZSize);
+RB_METHOD(tableGetAt);
+RB_METHOD(tableSetAt);
+
+void tableBindingInit()
+{
+	VALUE klass = rb_define_class("Table", rb_cObject);
+
+	rb_define_alloc_func(klass, classAllocate<&TableType>);
+
+	_rb_define_method(klass, "initialize", tableInitialize);
+	_rb_define_method(klass, "resize", tableResize);
+	_rb_define_method(klass, "xsize", tableXSize);
+	_rb_define_method(klass, "ysize", tableYSize);
+	_rb_define_method(klass, "zsize", tableZSize);
+	_rb_define_method(klass, "[]", tableGetAt);
+	_rb_define_method(klass, "[]=", tableSetAt);
+}
+
+DEF_TYPE(Table);
+
+RB_METHOD(tableInitialize)
+{
+	int x, y, z;
+
+	parseArgsTableSizes(argc, argv, &x, &y, &z);
+
+	Table *t = new Table(x, y, z);
+
+	setPrivateData(self, t);
+
+	return self;
+}
+
+RB_METHOD(tableResize)
+{
+	Table *t = getPrivateData<Table>(self);
+
+	int x, y, z;
+	parseArgsTableSizes(argc, argv, &x, &y, &z);
+
+	t->resize(x, y, z);
+
+	return Qnil;
+}
+
+RB_METHOD(tableXSize)
+{
+	RB_UNUSED_PARAM;
+	Table *t = getPrivateData<Table>(self);
+	return INT2NUM(t->xSize());
+}
+
+RB_METHOD(tableYSize)
+{
+	RB_UNUSED_PARAM;
+	Table *t = getPrivateData<Table>(self);
+	return INT2NUM(t->ySize());
+}
+
+RB_METHOD(tableZSize)
+{
+	RB_UNUSED_PARAM;
+	Table *t = getPrivateData<Table>(self);
+	return INT2NUM(t->zSize());
+}
+
+RB_METHOD(tableGetAt)
+{
+	Table *t = getPrivateData<Table>(self);
+
+	int x, y, z;
+	x = y = z = 0;
+
+	x = NUM2INT(argv[0]);
+	if (argc > 1)
+		y = NUM2INT(argv[1]);
+	if (argc > 2)
+		z = NUM2INT(argv[2]);
+
+	if (argc > 3)
+		rb_raise(rb_eArgError, "wrong number of arguments");
+
+	if (x < 0 || x >= t->xSize()
+	||  y < 0 || y >= t->ySize()
+	||  z < 0 || z >= t->zSize())
+	{
+		return Qnil;
+	}
+
+	short result = t->get(x, y, z);
+
+	return INT2FIX(result); /* short always fits in a Fixnum */
+}
+
+RB_METHOD(tableSetAt)
+{
+	Table *t = getPrivateData<Table>(self);
+
+	int x, y, z, value;
+	x = y = z = 0;
+
+	if (argc < 2)
+		rb_raise(rb_eArgError, "wrong number of arguments");
+
+	switch (argc)
+	{
+	default:
+	case 2 :
+		x = NUM2INT(argv[0]);
+		value = NUM2INT(argv[1]);
+
+		break;
+	case 3 :
+		x = NUM2INT(argv[0]);
+		y = NUM2INT(argv[1]);
+		value = NUM2INT(argv[2]);
+
+		break;
+	case 4 :
+		x = NUM2INT(argv[0]);
+		y = NUM2INT(argv[1]);
+		z = NUM2INT(argv[2]);
+		value = NUM2INT(argv[3]);
+
+		break;
+	}
+
+	t->set(value, x, y, z);
+
+	return argv[argc - 1];
+}

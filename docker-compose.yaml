@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alibrary-illusion-builder
+    volumes:
+      # 소스 코드 마운트 (개발 시 실시간 반영)
+      - ./src:/workspace/src:ro
+      - ./packages:/workspace/packages:rw
+      - ./dist:/workspace/dist:rw
+      - ./build:/workspace/build:rw
+      # node_modules는 컨테이너 내부에서 관리
+      - node_modules:/workspace/node_modules
+      - packages_compiler_node_modules:/workspace/packages/compiler/node_modules
+      - packages_compiler_zetpkg_node_modules:/workspace/packages/compiler-zetpkg/node_modules
+    working_dir: /workspace
+    environment:
+      - NODE_ENV=development
+      - EMSDK=/opt/emsdk
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:
+  packages_compiler_node_modules:
+  packages_compiler_zetpkg_node_modules:

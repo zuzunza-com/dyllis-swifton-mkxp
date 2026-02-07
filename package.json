@@ -1,0 +1,45 @@
+{
+  "name": "alibrary-illusion",
+  "version": "0.1.0",
+  "description": "Palcon 라이브러리 - 다양한 게임 엔진을 실행하기 위한 통합 플레이어",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "make build",
+    "build:ts": "make build-ts",
+    "build:wasm": "make build-wasm",
+    "build:packages": "make build-packages",
+    "clean": "make clean",
+    "install": "make install",
+    "test": "make test",
+    "dev": "make dev",
+    "lint": "make lint",
+    "format": "make format",
+    "docker:build": "make docker-build",
+    "docker:up": "make docker-up",
+    "docker:shell": "make docker-shell",
+    "docker:down": "make docker-down"
+  },
+  "keywords": [
+    "palcon",
+    "game-engine",
+    "flash",
+    "rgss",
+    "pixipkg",
+    "zetpkg",
+    "wasm",
+    "emscripten"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

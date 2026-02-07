@@ -1,0 +1,43 @@
+{
+  "name": "@alibrary-illusion/compiler",
+  "version": "0.1.0",
+  "description": "ZetPkg 컴파일러 - 소스 파일들을 ZetPkg 형식으로 패키징",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "zetpkg",
+    "compiler",
+    "packaging",
+    "palcon"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@alibrary-illusion/parser": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "peerDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
+}
